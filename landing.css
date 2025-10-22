@@ -1,0 +1,36 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+    background: radial-gradient(ellipse at bottom, #120024 0%, #000000 100%);
+    color: #fff;
+}
+
+#container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+}
+
+.content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    top: 18vh;
+}
+
+h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 1rem;
+    color: #ccc;
+    margin-bottom: 30px;
+}
+
