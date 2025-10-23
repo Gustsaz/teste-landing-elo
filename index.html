@@ -2,31 +2,164 @@
 <html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>teste landing page</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Landing com 3D + Carrossel</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="landing.css" />
+    <link rel="stylesheet" href="landing.css">
 </head>
 
 <body>
-    <div class="content">
-        <h1>Sua jornada, nossa comunidade. Você não está sozinha.</h1>
-        <p>Um espaço seguro para compartilhar suas vitórias, desabafar sobre os desafios e se conectar com outras mães
-            que entendem você de verdade.
-        </p>
-    </div>
+    <section id="hero">
+        <div class="content">
+            <h2>Sua jornada, nossa comunidade. Você não está sozinha.</h2>
+            <p>Um espaço seguro para compartilhar suas vitórias, desabafar sobre os desafios e se conectar com outras mães que entendem você de verdade.</p>
+        </div>
 
-    <div id="container"></div>
+        <div id="container" aria-hidden="true"></div>
+    </section>
 
-    <script src="https://cdn.jsdelivr.net/npm/three@0.127.0/build/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.127.0/examples/js/loaders/MTLLoader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.127.0/examples/js/loaders/OBJLoader.js"></script>
+    <section class="partners-section" aria-label="Parceiros">
+        <div class="partners-wrapper">
+            <div id="partners-carousel" class="partners-carousel" tabindex="0" aria-roledescription="carousel">
+                <a class="partner" href="https://www.justiceiras.org.br/" target="_blank" rel="noopener">
+                    <img src="justiceiras.svg" alt="Justiceiras" />
+                </a>
 
-    <script type="module" src="modeloelo.js"></script>
+                <a class="partner" href="https://amparomaternal.org/pt_br/" target="_blank" rel="noopener">
+                    <img src="amparo.svg" alt="Amparo Maternal" />
+                </a>
+
+                <a class="partner" href="https://www.justiceiras.org.br/" target="_blank" rel="noopener">
+                    <img src="justiceiras.svg" alt="Justiceiras" />
+                </a>
+
+                <a class="partner" href="https://amparomaternal.org/pt_br/" target="_blank" rel="noopener">
+                    <img src="amparo.svg" alt="Amparo Maternal" />
+                </a>
+
+                <a class="partner" href="https://www.justiceiras.org.br/" target="_blank" rel="noopener">
+                    <img src="justiceiras.svg" alt="Justiceiras" />
+                </a>
+
+                <a class="partner" href="https://amparomaternal.org/pt_br/" target="_blank" rel="noopener">
+                    <img src="amparo.svg" alt="Amparo Maternal" />
+                </a>
+                <a class="partner" href="https://www.justiceiras.org.br/" target="_blank" rel="noopener">
+                    <img src="justiceiras.svg" alt="Justiceiras" />
+                </a>
+
+                <a class="partner" href="https://amparomaternal.org/pt_br/" target="_blank" rel="noopener">
+                    <img src="amparo.svg" alt="Amparo Maternal" />
+                </a>
+                <a class="partner" href="https://www.justiceiras.org.br/" target="_blank" rel="noopener">
+                    <img src="justiceiras.svg" alt="Justiceiras" />
+                </a>
+
+                <a class="partner" href="https://amparomaternal.org/pt_br/" target="_blank" rel="noopener">
+                    <img src="amparo.svg" alt="Amparo Maternal" />
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <script type="module" src="./modeloelo.js"></script>
+
+    <script>
+        (function () {
+            const carousel = document.getElementById('partners-carousel');
+            if (!carousel) return;
+
+            const SPEED_PX_PER_SEC = 18; 
+            const originalItems = Array.from(carousel.querySelectorAll('a.partner'));
+
+            function initMarquee() {
+                carousel.innerHTML = '';
+
+                const marquee = document.createElement('div');
+                marquee.className = 'marquee';
+
+                const wrap1 = document.createElement('div');
+                wrap1.className = 'marquee__wrap';
+                originalItems.forEach(it => wrap1.appendChild(it.cloneNode(true)));
+
+                const wrap2 = wrap1.cloneNode(true);
+                wrap2.className = 'marquee__wrap';
+
+                marquee.appendChild(wrap1);
+                marquee.appendChild(wrap2);
+                carousel.appendChild(marquee);
+
+                requestAnimationFrame(() => {
+                    const wrapW = wrap1.getBoundingClientRect().width;
+                    if (!wrapW || wrapW < 2) {
+                        setTimeout(() => {
+                            const wrapW2 = wrap1.getBoundingClientRect().width;
+                            startAnimation(marquee, wrapW2);
+                        }, 120);
+                    } else {
+                        startAnimation(marquee, wrapW);
+                    }
+                });
+
+                marquee.addEventListener('mouseenter', () => {
+                    marquee.classList.add('paused');
+                });
+                marquee.addEventListener('mouseleave', () => {
+                    marquee.classList.remove('paused');
+                });
+                marquee.addEventListener('focusin', () => marquee.classList.add('paused'));
+                marquee.addEventListener('focusout', () => marquee.classList.remove('paused'));
+                marquee.addEventListener('touchstart', () => marquee.classList.add('paused'));
+                marquee.addEventListener('touchend', () => marquee.classList.remove('paused'));
+            }
+
+            function startAnimation(marquee, wrapWidth) {
+                if (!wrapWidth || wrapWidth < 2) wrapWidth = 800;
+                const duration = wrapWidth / SPEED_PX_PER_SEC; 
+                marquee.style.animationDuration = duration + 's';
+                requestAnimationFrame(() => marquee.classList.add('animate'));
+            }
+
+            const imgs = originalItems.map(a => a.querySelector('img')).filter(Boolean);
+            if (imgs.length === 0) {
+                initMarquee();
+            } else {
+                let loaded = 0;
+                imgs.forEach(img => {
+                    if (img.complete && img.naturalWidth !== 0) {
+                        loaded++;
+                    } else {
+                        img.addEventListener('load', () => { loaded++; if (loaded === imgs.length) initMarquee(); });
+                        img.addEventListener('error', () => { loaded++; if (loaded === imgs.length) initMarquee(); });
+                    }
+                });
+                if (loaded === imgs.length) initMarquee();
+                setTimeout(() => { if (!carousel.querySelector('.marquee')) initMarquee(); }, 1000);
+            }
+
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    const marquee = carousel.querySelector('.marquee');
+                    const wrap1 = carousel.querySelector('.marquee__wrap');
+                    if (!marquee || !wrap1) return;
+                    marquee.classList.remove('animate');
+                    setTimeout(() => {
+                        const w = wrap1.getBoundingClientRect().width;
+                        startAnimation(marquee, w);
+                    }, 80);
+                }, 120);
+            });
+        })();
+    </script>
+
+
 </body>
 
 </html>
